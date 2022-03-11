@@ -15,7 +15,6 @@ public class TreatmentController {
 
     private final DefaultTreatmentService service;
 
-    @Autowired
     public TreatmentController(DefaultTreatmentService service) {
         this.service = service;
     }
@@ -24,6 +23,5 @@ public class TreatmentController {
     public List<Treatment> getAllTreatments() {
         return service.getAllTreatments();
     }
-
 
 }
