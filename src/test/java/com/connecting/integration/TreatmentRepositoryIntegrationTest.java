@@ -1,6 +1,7 @@
-package com.connecting.repository;
+package com.connecting.integration;
 
 import com.connecting.entity.Treatment;
+import com.connecting.repository.TreatmentRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 
 @DataJpaTest
-class TreatmentRepositoryTest {
+class TreatmentRepositoryIntegrationTest {
 
   @Autowired private TreatmentRepository repository;
 
