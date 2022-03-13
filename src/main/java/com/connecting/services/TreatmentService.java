@@ -4,16 +4,15 @@ import com.connecting.entity.Treatment;
 import com.connecting.repository.TreatmentRepository;
 import org.springframework.stereotype.Component;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
 @Component
-public class DefaultTreatmentService {
+public class TreatmentService {
 
     private final TreatmentRepository repository;
 
-    public DefaultTreatmentService(TreatmentRepository repository) {
+    public TreatmentService(TreatmentRepository repository) {
         this.repository = repository;
     }
 

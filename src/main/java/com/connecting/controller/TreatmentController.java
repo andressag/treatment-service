@@ -1,27 +1,33 @@
 package com.connecting.controller;
 
 import com.connecting.entity.Treatment;
-import com.connecting.services.DefaultTreatmentService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.connecting.services.TreatmentService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/connecting/treatments")
 public class TreatmentController {
 
-    private final DefaultTreatmentService service;
+    private final TreatmentService service;
 
-    public TreatmentController(DefaultTreatmentService service) {
+    public TreatmentController(TreatmentService service) {
         this.service = service;
     }
 
     @GetMapping
-    public List<Treatment> getAllTreatments() {
+    public List<Treatment> getTreatments() {
         return service.getAllTreatments();
+    }
+
+    @GetMapping
+    public Optional<Treatment> getTreatmentsByName(String name) {
+        return service.getTreatmentBy(name);
+
     }
 
 }
