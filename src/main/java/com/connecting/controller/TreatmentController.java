@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -45,5 +46,13 @@ public class TreatmentController {
       return ResponseEntity.badRequest()
           .body("Could not create treatment, name: " + treatment.getName() + " is not unique");
     }
+  }
+
+  @PutMapping("/treatment/update")
+  public ResponseEntity<Object> updateTreatment(@RequestBody Treatment treatment) {
+      final Optional<Treatment> result = service.updateTreatment(treatment);
+    return result.<ResponseEntity<Object>>map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest()
+            .body("Could not find treatment name: " + treatment.getName() + " with id: " + treatment.getId()));
+
   }
 }

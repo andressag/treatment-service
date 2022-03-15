@@ -5,9 +5,9 @@ import com.connecting.entity.Treatment;
 import com.connecting.repository.TreatmentRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.assertj.core.util.Lists;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -23,6 +23,7 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -34,22 +35,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
     classes = Application.class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class TreatmentRestControllerIntegrationTest {
 
   @Autowired private MockMvc mvc;
 
   @Autowired private TreatmentRepository repository;
 
-  @BeforeEach
+  @BeforeAll
   void setUp() {
     final Treatment test1 = Treatment.builder().name("test1").duration(60).build();
     final Treatment test2 = Treatment.builder().name("test2").duration(60).build();
     repository.saveAll(Lists.list(test1, test2));
-  }
-
-  @AfterEach
-  void cleanUp() {
-    repository.deleteAll();
   }
 
   @Test
@@ -74,7 +71,7 @@ class TreatmentRestControllerIntegrationTest {
 
   @Test
   void whenGetTreatmentsByNameDoesNotExistsThenReturnEmptyTreatment() throws Exception {
-    mvc.perform(get("/api/connecting/treatment/test5").contentType(APPLICATION_JSON))
+    mvc.perform(get("/api/connecting/treatment/test-1").contentType(APPLICATION_JSON))
         .andDo(print())
         .andExpect(status().isOk())
         .andExpect(content().contentTypeCompatibleWith(APPLICATION_JSON))
@@ -85,11 +82,11 @@ class TreatmentRestControllerIntegrationTest {
   void whenPostNewTreatmentsThenSaveAndReturn() throws Exception {
     mvc.perform(
             post("/api/connecting/treatment/create")
-                .content(asJsonString(Treatment.builder().name("test5").duration(30).build()))
+                .content(asJsonString(Treatment.builder().name("test3").duration(30).build()))
                 .contentType(APPLICATION_JSON)
                 .accept(APPLICATION_JSON))
         .andExpect(status().isOk())
-        .andExpect(MockMvcResultMatchers.jsonPath("$.name", is("test5")));
+        .andExpect(MockMvcResultMatchers.jsonPath("$.name", is("test3")));
   }
 
   @Test
@@ -100,6 +97,18 @@ class TreatmentRestControllerIntegrationTest {
                 .contentType(APPLICATION_JSON)
                 .accept(APPLICATION_JSON))
         .andExpect(status().isBadRequest());
+  }
+
+  @Test
+  void whenPutTreatmentsWithExitingIdThenUpdateAndReturn() throws Exception {
+    mvc.perform(
+            put("/api/connecting/treatment/update")
+                .content(
+                    asJsonString(Treatment.builder().id(1L).name("test1").duration(15).build()))
+                .contentType(APPLICATION_JSON)
+                .accept(APPLICATION_JSON))
+        .andExpect(status().isOk())
+        .andExpect(MockMvcResultMatchers.jsonPath("$.duration", is(15)));
   }
 
   private String asJsonString(final Object obj) {
