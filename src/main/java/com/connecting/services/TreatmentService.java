@@ -2,13 +2,13 @@ package com.connecting.services;
 
 import com.connecting.entity.Treatment;
 import com.connecting.repository.TreatmentRepository;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import javax.persistence.PersistenceException;
 import java.util.List;
 import java.util.Optional;
 
-@Component
+@Service
 public class TreatmentService {
 
   private final TreatmentRepository repository;
