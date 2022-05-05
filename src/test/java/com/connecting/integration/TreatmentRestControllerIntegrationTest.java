@@ -1,10 +1,12 @@
 package com.connecting.integration;
 
 import com.connecting.Application;
+import com.connecting.config.PostgresqlContainer;
 import com.connecting.entity.Treatment;
 import com.connecting.repository.TreatmentRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.assertj.core.util.Lists;
+import org.junit.ClassRule;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -16,6 +18,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.testcontainers.containers.PostgreSQLContainer;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
@@ -37,6 +40,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
     classes = Application.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class TreatmentRestControllerIntegrationTest {
+
+  @ClassRule
+  public static PostgreSQLContainer postgreSQLContainer = PostgresqlContainer.getInstance();
 
   @Autowired private MockMvc mvc;
 
